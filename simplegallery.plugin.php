@@ -155,7 +155,7 @@ class SimpleGallery extends Plugin
 				case 'Configure' :
 					$form = new FormUI( 'simplegallery' );
 
-					$form->append( 'text', 'base', 'option:simplegallery_base', _t( 'Gallery location:', 'simplegallery' ) );
+					$form->append( 'text', 'base', 'option:simplegallery_base', _t( 'Gallery location: ', 'simplegallery' ) . Site::get_url('habari') . '/' );
 					$form->base->value = $this->base;
 					$form->append( 'submit', 'submit', _t( 'Submit' ) );
 
