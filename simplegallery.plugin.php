@@ -165,6 +165,11 @@ class SimpleGallery extends Plugin
 		}
 	}
 
+	public function help()
+	{
+		return "The Simple Gallery plugin looks for directories and files in the <code>user/files/simplegallery</code> directory. You must create this directory with permissions that let the web server read it. You can then configure the location of the gallery on your site.";
+	}
+
 	private function pretty_title($title)
 	{
 		// Strip any extension
