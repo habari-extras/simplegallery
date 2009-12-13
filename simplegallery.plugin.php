@@ -69,6 +69,7 @@ class SimpleGallery extends Plugin
 	 * @param RewriteRule $rule The matched rewrite rule
 	 * @param string The URL stub requested
 	 * @param array $params Some stuff
+	 * @todo Find a nicer way to assign thumbnails
 	 **/
 	public static function rewrite_match_gallery( $rule, $stub, $params )
 	{
@@ -84,7 +85,7 @@ class SimpleGallery extends Plugin
 	public function action_plugin_act_display_gallery( $handler )
 	{
 		$gallery_path = $handler->handler_vars['gallerypath'];
-		// Check if it's an image file is being requested
+		// Check if an image file is being requested, and if so return it
 		$image = $this->silo->silo_get('simplegallery/' . $gallery_path);
 		if ( $image && in_array($image->filetype, array('image_gif', 'image_png', 'image_jpeg') ) ) {
 			header('Content-type: ' . $image->filetype);
@@ -95,24 +96,42 @@ class SimpleGallery extends Plugin
 		// It must be a directory
 		$assets = $this->silo->silo_dir('simplegallery/' . $gallery_path);
 
-		$theme = Controller::get_handler()->theme;
+		$theme = $handler->theme;
 		$theme->css = $this->get_url() . '/simplegallery.css';
 		$dirs = array();
 		$images = array();
+		$thumbnails = array();
 
 		if ( 0 != count($assets) ) {
 
-			foreach ($assets as $asset) {
+			foreach ( $assets as $asset ) {
 				// Need to decode twice to keep the /, because URL::get() callse RewriteRule::build() which urlencodes.
 				$asset->url = urldecode(urldecode(
 					URL::get( 'simplegallery', array( 'gallerypath' => $gallery_path . '/'. ($asset->title) ) )
 				));
 				$asset->pretty_title = $this->pretty_title($asset->title);
 				if ( $asset->is_dir ) {
+					$asset->thumbnail = null;
 					$dirs[] = $asset;
 				}
 				else if ( in_array($asset->filetype, array('image_gif', 'image_png', 'image_jpeg') ) ) {
-					$images[] = $asset;
+					if ( strpos($asset->title, 'thumbnail') === FALSE ) {
+						$images[] = $asset;
+					}
+					else {
+						$thumbnails[] = $asset;
+					}
+				}
+			}
+
+			// Assign manual thumbnails appropriately
+			foreach ( $thumbnails as $thumbnail ) {
+				$base = basename($thumbnail->title, pathinfo($thumbnail->title, PATHINFO_EXTENSION));
+				foreach ( $dirs as $dir ) {
+					if ( $dir->title . '.thumbnail.' == $base ) {
+						$dir->thumbnail = $thumbnail;
+						break;
+					}
 				}
 			}
 

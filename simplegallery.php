@@ -18,17 +18,30 @@
 
 	<h2><?php echo $title; ?></h2>
 
-	<?php foreach ($dirs as $dir): ?>
+	<?php foreach ( $dirs as $dir ): ?>
+
+		<?php if ( $dir->thumbnail != null ): ?>
+
+		<div class='gallery-img'>
+			<a href='<?php echo $dir->url; ?>' title='<?php echo $dir->pretty_title; ?>'>
+				<img src='<?php echo $dir->thumbnail->url; ?>'>
+			</a>
+			<h3><?php echo $dir->pretty_title; ?></h3>
+		</div>
+
+		<?php else: ?>
 
 		<div class='gallery-dir'>
 			Gallery: <a href='<?php echo $dir->url; ?>' title='<?php echo $dir->pretty_title; ?>'><?php echo $dir->pretty_title; ?></a>
 		</div>
 
+		<?php endif; ?>
+
 	<?php endforeach; ?>
 
 	<div class='clear'></div>
 
-	<?php foreach ($images as $image): ?>
+	<?php foreach ( $images as $image ): ?>
 
 		<div class='gallery-img'>
 			<a href='<?php echo $image->url; ?>' title='<?php echo $image->pretty_title; ?>'>
