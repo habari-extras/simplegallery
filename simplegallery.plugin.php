@@ -186,7 +186,7 @@ class SimpleGallery extends Plugin
 
 	public function help()
 	{
-		return "The Simple Gallery plugin looks for directories and files in the <code>user/files/simplegallery</code> directory. You must create this directory with permissions that let the web server read it. You can then configure the location of the gallery on your site.";
+		return "The Simple Gallery plugin looks for directories and files in the <code>user/files/simplegallery</code> directory. You must create this directory with permissions that let the web server read it. You can then configure the location of the gallery on your site. You can associate a thumbnail to be displayed for a directory by naming it the same as the directory and adding '.thumbnail.jpg'. For exampe, you can use a thumbnail for a directory named 'Kittens' by naming it 'Kittens.thumbnail.jpg'. Note that png and gif images are also supported.";
 	}
 
 	private function pretty_title($title)
